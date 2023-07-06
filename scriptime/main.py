@@ -71,8 +71,6 @@ class Timer:
             )
 
         self.start_time = None
-        self.server = server
-        self.port = port
 
     def start(self):
         self.start_time = time.time()
@@ -85,8 +83,8 @@ class Timer:
         elapsed_time_str = time.strftime("%H:%M:%S", time.gmtime(elapsed_time))
 
         ram_usage = psutil.virtual_memory().percent
-        ram_available = psutil.virtual_memory().available
         cpu_usage = psutil.cpu_percent()
+        ram_available = psutil.virtual_memory().available / (1024**3)
 
         system_info = platform.system()
         processor = platform.processor()
@@ -99,15 +97,13 @@ class Timer:
         email_body += f"Elapsed Time: {elapsed_time_str}\n\n"
         email_body += f"Max RAM Usage: {ram_usage:.2f}%\n"
         email_body += f"Max CPU Usage: {cpu_usage:.2f}%\n"
-        email_body += f"Max RAM Available: {ram_available:.2f}\n\n"
+        email_body += f"Max RAM Available: {ram_available:.2f} GB\n\n"
         email_body += f"System information: {system_info}\n"
         email_body += f"Processor: {processor}\n"
-        email_body += f"Python Version: {python_version}\n"
-        email_body += f"Packages Used: {self.pkgs}"
+        email_body += f"Python Version: {python_version}\n\n"
+        email_body += f"Packages Used: {self.pkgs}\n"
 
         try:
-            smtplib.SMTP.connect(self.server, self.port)
-
             with smtplib.SMTP(self.server, self.port) as smtp:
                 smtp.starttls()
                 smtp.login(self.sender_email, self.sender_password)
@@ -118,14 +114,15 @@ class Timer:
                         smtp.sendmail(self.sender_email, email, email_body)
         except Exception as e:
             raise Exception(f"An error occurred sending an email: {e}")
-        finally:
-            smtplib.SMTP.close()
 
         if print_body:
             print(email_body)
 
     def play_sound(self):
-        wave_obj = sa.WaveObject.from_wave_file("resources/alert.wav")
+        resources_dir = os.path.join(os.path.dirname(__file__), "resources")
+        alert_wav_path = os.path.join(resources_dir, "alert.wav")
+        print(alert_wav_path)
+        wave_obj = sa.WaveObject.from_wave_file(alert_wav_path)
         play_obj = wave_obj.play()
         play_obj.wait_done()
 
