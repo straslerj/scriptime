@@ -105,17 +105,17 @@ class Timer:
         email_body += f"Python Version: {python_version}\n"
         email_body += f"Packages Used: {self.pkgs}"
 
-        try:
-            with smtplib.SMTP(self.server, self.port) as smtp:
-                smtp.starttls()
-                smtp.login(self.sender_email, self.sender_password)
-                if isinstance(target, str):
-                    smtp.sendmail(self.sender_email, target, email_body)
-                elif isinstance(target, list):
-                    for email in target:
-                        smtp.sendmail(self.sender_email, email, email_body)
-        except Exception as e:
-            raise Exception(f"An error occurred sending an email: {e}")
+        # try:
+        with smtplib.SMTP(self.server, self.port) as smtp:
+            smtp.starttls()
+            smtp.login(self.sender_email, self.sender_password)
+            if isinstance(target, str):
+                smtp.sendmail(self.sender_email, target, email_body)
+            elif isinstance(target, list):
+                for email in target:
+                    smtp.sendmail(self.sender_email, email, email_body)
+        # except Exception as e:
+        #     raise Exception(f"An error occurred sending an email: {e}")
 
     def play_sound(self):
         wave_obj = sa.WaveObject.from_wave_file("resources/alert.wav")
