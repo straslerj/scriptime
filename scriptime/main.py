@@ -119,13 +119,7 @@ class Timer:
             print(email_body)
 
     def play_sound(self):
-        # current_dir = os.path.dirname(__file__)
-        # parent_dir = os.path.dirname(current_dir)
-        # alert_wav_path = os.path.join(parent_dir, "resources/alert.wav")
-        # print(alert_wav_path)
-        # path_list = os.getenv("PATH").split(os.pathsep)
-        # print(path_list)
-        wave_obj = sa.WaveObject.from_wave_file("scriptime/alert.wav")
+        wave_obj = sa.WaveObject.from_wave_file("alert.wav")
         play_obj = wave_obj.play()
         play_obj.wait_done()
 
