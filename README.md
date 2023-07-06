@@ -18,6 +18,7 @@ The first step to using scriptime is setting up the email that will be sending t
 
 1. Choose how you will pass your email credential into scriptime:
    1. **JSON config file**
+   
         To set up, create a .json file with the following contents:
         ```
         {
@@ -28,14 +29,23 @@ The first step to using scriptime is setting up the email that will be sending t
         }
         ```
     2. **Environment variables**
+
         *Recommended -- if you plan to use scriptime more than once this will be the simplest method over time.*
+
         Set the following environment variales:
+
         `SCRIPTIME_EMAIL=example@email.com`
+
         `SCRIPTIME_PASSWORD=superSecure1`
+
         `SCRIPTIME_SERVER=smtp.email.com`
+
         `SCRIPTIME_PORT=123`
+
     3. **Hard coding**
+
         If you choose to go the hard code route, when creating the `Timer` object, you will need to pass in extra arguments. Your constructor call should look something like:
+
         ```python
         timer = Timer(method="hardcode", email="example@email.com", password="superSecure1", server="smtp.email.com", port=123)
         ```
@@ -64,7 +74,9 @@ The use of scriptimer is very straightforward:
         timer = Timer(method="env")
         ```
    3. **Hard coding**
+
         (This may look famiiliar):
+
         ```python
         timer = Timer(method="hardcode", email="example@email.com", password="superSecure1", server="smtp.email.com", port=123)
         ```
@@ -75,6 +87,7 @@ The use of scriptimer is very straightforward:
 
 6. Then, at the end of the script (or wherever you would like a notification), add one of or both of the following:
    1. **Email notification**
+
         To get an email notification, simply call the send_email function:
         ```python
         timer.send_email("receiver@email.com")
@@ -95,6 +108,7 @@ The use of scriptimer is very straightforward:
         timer.send_email("receiver@email.com", print_body=True)
         ```
    2. **Play sound**
+
         If you would like an audible notification that your script has finished, simply:
         ```python
         timer.play_sound()
