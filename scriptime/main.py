@@ -125,7 +125,7 @@ class Timer:
         # print(alert_wav_path)
         # path_list = os.getenv("PATH").split(os.pathsep)
         # print(path_list)
-        wave_obj = sa.WaveObject.from_wave_file("alert.wav")
+        wave_obj = sa.WaveObject.from_wave_file("scriptime/alert.wav")
         play_obj = wave_obj.play()
         play_obj.wait_done()
 
