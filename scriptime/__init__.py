@@ -1,1 +1,3 @@
-from main import Timer
+from .main import YourClass
+
+__all__ = ["YourClass"]

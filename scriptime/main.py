@@ -8,7 +8,7 @@ import simpleaudio as sa
 
 
 class Timer:
-    def __init__(self, method="json", email=None, password=None):
+    def __init__(self, method="json", config_path=None, email=None, password=None):
         current_time = time.localtime()
         formatted_time = time.strftime("%m-%d-%Y %H:%M:%S", current_time)
 
@@ -20,12 +20,17 @@ class Timer:
 
         if method == "json":
             # load passwords through json
-            with open("config.json") as f:
-                secrets = json.load(f)
-                self.sender_email = secrets.get("sender_email")
-                self.sender_password = secrets.get("sender_password")
-                self.server = secrets.get("server")
-                self.port = secrets.get("port")
+            try:
+                with open(config_path) as f:
+                    secrets = json.load(f)
+                    self.sender_email = secrets.get("sender_email")
+                    self.sender_password = secrets.get("sender_password")
+                    self.server = secrets.get("server")
+                    self.port = secrets.get("port")
+            except FileNotFoundError:
+                print(f"{config_path} not found.")
+            except json.JSONDecodeError:
+                print("Error decoding JSON data.")
         elif method == "env":
             # loads passwords through env variables
             self.sender_email = os.environ.get("SENDER_EMAIL")
