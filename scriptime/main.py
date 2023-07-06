@@ -118,11 +118,20 @@ class Timer:
         if print_body:
             print(email_body)
 
+    # def play_sound(self):
+    #     resources_dir = os.path.join(os.path.dirname(__file__), "resources")
+    #     alert_wav_path = os.path.join(resources_dir, "alert.wav")
+    #     print(alert_wav_path)
+    #     wave_obj = sa.WaveObject.from_wave_file(alert_wav_path)
+    #     play_obj = wave_obj.play()
+    #     play_obj.wait_done()
+
     def play_sound(self):
-        resources_dir = os.path.join(os.path.dirname(__file__), "resources")
-        alert_wav_path = os.path.join(resources_dir, "alert.wav")
-        print(alert_wav_path)
-        wave_obj = sa.WaveObject.from_wave_file(alert_wav_path)
+        # package_name = "scriptime"  # Replace with your actual package name
+        resource_path = "/".join(("resources", "alert.wav"))
+        # alert_wav_path = pkg_resources.resource_filename(package_name, resource_path)
+        print(resource_path)
+        wave_obj = sa.WaveObject.from_wave_file(resource_path)
         play_obj = wave_obj.play()
         play_obj.wait_done()
 
