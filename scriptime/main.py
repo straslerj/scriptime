@@ -1,25 +1,70 @@
 import json
 import os
-import pkg_resources
 import platform
 import smtplib
 import sys
 import time
+from typing import Optional, Union
 
+import pkg_resources
 import psutil
 import simpleaudio as sa
 
 
 class Timer:
+    """The Timer class contains all functionality for the scriptime project
+
+    This class contains the logic to send an email (send_email) and play a sound (play_sound) when your script has completed running,
+    as well as some helper methods to do so.
+
+    Attributes
+    ----------
+    - `method`: string, default="json"
+            - Dictates how the program should get email credentials. Options include:
+                - `json`: (default value) read a JSON file containing email credentials.
+                - `env`: parse email credentials from environment variables.
+                - `hardcode`: manually pass your credentials in as arguments
+        - `config_path`: string (optional)
+            - If `method` is set to `"json"`, then a path to the JSON file must be passed in as a string.
+        - `email`: string (optional)
+            - Sender email address. If `method` is set to `"hardcode"`, then the sender email address must be passed in as a string.
+        - `password`: string (optional)
+            - Sender email password. If `method` is set to `"hardcode"`, then the sender email passsword must be passed in as a string.
+        - `server`: string (optional)
+            - SMTP SSL server for sender email. If `method` is set to `"hardcode"`, then the sender email SMTP SSL server must be passed in as a string. Find your email server at: https://www.arclab.com/en/kb/email/list-of-smtp-and-pop3-servers-mailserver-list.html
+        - `port`: int (optional)
+            - SMTP SSL port for sender email. If `method` is set to `"hardcode"`, then the sender email SMTP SSL email port must be passed in as a string. Find your email port at: https://www.arclab.com/en/kb/email/list-of-smtp-and-pop3-servers-mailserver-list.html
+    """
+
     def __init__(
         self,
-        method="json",
-        config_path=None,
-        email=None,
-        password=None,
-        server=None,
-        port=None,
-    ):
+        method: str = "json",
+        config_path: Optional[str] = None,
+        email: Optional[str] = None,
+        password: Optional[str] = None,
+        server: Optional[str] = None,
+        port: Optional[int] = None,
+    ) -> None:
+        """Initialize Timer with method, config_path, email, password, server, and port.
+
+        Parameters
+        ----------
+        - `method`: string, default="json"
+            - Dictates how the program should get email credentials. Options include:
+                - `json`: (default value) read a JSON file containing email credentials.
+                - `env`: parse email credentials from environment variables.
+                - `hardcode`: manually pass your credentials in as arguments
+        - `config_path`: string (optional)
+            - If `method` is set to `"json"`, then a path to the JSON file must be passed in as a string.
+        - `email`: string (optional)
+            - Sender email address. If `method` is set to `"hardcode"`, then the sender email address must be passed in as a string.
+        - `password`: string (optional)
+            - Sender email password. If `method` is set to `"hardcode"`, then the sender email passsword must be passed in as a string.
+        - `server`: string (optional)
+            - SMTP SSL server for sender email. If `method` is set to `"hardcode"`, then the sender email SMTP SSL server must be passed in as a string. Find your email server at: https://www.arclab.com/en/kb/email/list-of-smtp-and-pop3-servers-mailserver-list.html
+        - `port`: int (optional)
+            - SMTP SSL port for sender email. If `method` is set to `"hardcode"`, then the sender email SMTP SSL email port must be passed in as a string. Find your email port at: https://www.arclab.com/en/kb/email/list-of-smtp-and-pop3-servers-mailserver-list.html
+        """
         current_time = time.localtime()
         formatted_time = time.strftime("%m-%d-%Y %H:%M:%S", current_time)
 
@@ -74,9 +119,22 @@ class Timer:
         self.start_time = None
 
     def start(self):
+        """Starts the timer in order for the script runtime to be calcualted."""
         self.start_time = time.time()
 
-    def send_email(self, target, print_body=False):
+    def send_email(self, target: Union[str, list], print_body: bool = False) -> None:
+        """Sends the email to the targeted address(es).
+
+        The email body will be formulated and sent to the specified target address(es). \
+            Typical use would be doing this at the end of the script, although there is no one forcing you to do that.
+
+        Arguments
+        ---------
+        - `target`: string or array
+            - The address(es) to which the notification will be sent. This can be a string containing one email or a list containing a string of multiple emails.
+        - `print_body`: bool, default=False
+            - Set `True` if you would like the body of the notification printed out.
+        """
         if self.start_time is None:
             raise RuntimeError("Timer has not been started. To start, call start()")
 
@@ -98,7 +156,7 @@ class Timer:
         email_body += f"Elapsed Time: {elapsed_time_str}\n\n"
         email_body += f"Max RAM Usage: {ram_usage:.2f}%\n"
         email_body += f"Max CPU Usage: {cpu_usage:.2f}%\n"
-        email_body += f"Max RAM Available: {ram_available:.2f} GB\n\n"
+        email_body += f"Remaining RAM Available: {ram_available:.2f} GB\n\n"
         email_body += f"System information: {system_info}\n"
         email_body += f"Processor: {processor}\n"
         email_body += f"Python Version: {python_version}\n\n"
@@ -120,19 +178,14 @@ class Timer:
             print(email_body)
 
     def play_sound(self):
-        # wave_obj = sa.WaveObject.from_wave_file("alert.wav")
-        # play_obj = wave_obj.play()
-        # play_obj.wait_done()
-
+        """Plays a notification sound when called."""
         package_name = "scriptime"
         resource_path = "alert.wav"
         resource_package = None
 
         if getattr(sys, "frozen", False):
-            # Running as a bundled executable
-            resource_package = sys._MEIPASS  # Set by PyInstaller
+            resource_package = sys._MEIPASS
         else:
-            # Running as a script
             resource_package = package_name
 
         alert_wav_path = pkg_resources.resource_filename(
@@ -143,6 +196,10 @@ class Timer:
         play_obj.wait_done()
 
     def _get_pkgs(self):
+        """Gets the installed packages for the current venv.
+
+        This is a helper method for building the body of the email.
+        """
         installed_packages = [pkg.key for pkg in pkg_resources.working_set]
 
         pkg_versions = [
