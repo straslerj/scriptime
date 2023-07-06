@@ -77,7 +77,7 @@ class Timer:
     def start(self):
         self.start_time = time.time()
 
-    def send_email(self, target):
+    def send_email(self, target, print_body=False):
         if self.start_time is None:
             raise RuntimeError("Timer has not been started. To start, call start()")
 
@@ -105,14 +105,24 @@ class Timer:
         email_body += f"Python Version: {python_version}\n"
         email_body += f"Packages Used: {self.pkgs}"
 
-        with smtplib.SMTP(self.server, self.port) as smtp:
-            smtp.starttls()
-            smtp.login(self.sender_email, self.sender_password)
-            if isinstance(target, str):
-                smtp.sendmail(self.sender_email, target, email_body)
-            elif isinstance(target, list):
-                for email in target:
-                    smtp.sendmail(self.sender_email, email, email_body)
+        try:
+            smtplib.SMTP.connect(self.server, self.port)
+
+            with smtplib.SMTP(self.server, self.port) as smtp:
+                smtp.starttls()
+                smtp.login(self.sender_email, self.sender_password)
+                if isinstance(target, str):
+                    smtp.sendmail(self.sender_email, target, email_body)
+                elif isinstance(target, list):
+                    for email in target:
+                        smtp.sendmail(self.sender_email, email, email_body)
+        except Exception as e:
+            raise Exception(f"An error occurred sending an email: {e}")
+        finally:
+            smtplib.SMTP.close()
+
+        if print_body:
+            print(email_body)
 
     def play_sound(self):
         wave_obj = sa.WaveObject.from_wave_file("resources/alert.wav")
