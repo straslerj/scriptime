@@ -119,7 +119,8 @@ class Timer:
             print(email_body)
 
     def play_sound(self):
-        wave_obj = sa.WaveObject.from_wave_file("scriptime/alert.wav")
+        print(os.getcwd())
+        wave_obj = sa.WaveObject.from_wave_file("alert.wav")
         play_obj = wave_obj.play()
         play_obj.wait_done()
 
