@@ -3,6 +3,7 @@ import os
 import pkg_resources
 import platform
 import smtplib
+import sys
 import time
 
 import psutil
@@ -119,8 +120,25 @@ class Timer:
             print(email_body)
 
     def play_sound(self):
-        print(os.getcwd())
-        wave_obj = sa.WaveObject.from_wave_file("alert.wav")
+        # wave_obj = sa.WaveObject.from_wave_file("alert.wav")
+        # play_obj = wave_obj.play()
+        # play_obj.wait_done()
+
+        package_name = "scriptime"
+        resource_path = "alert.wav"
+        resource_package = None
+
+        if getattr(sys, "frozen", False):
+            # Running as a bundled executable
+            resource_package = sys._MEIPASS  # Set by PyInstaller
+        else:
+            # Running as a script
+            resource_package = package_name
+
+        alert_wav_path = pkg_resources.resource_filename(
+            resource_package, resource_path
+        )
+        wave_obj = sa.WaveObject.from_wave_file(alert_wav_path)
         play_obj = wave_obj.play()
         play_obj.wait_done()
 
