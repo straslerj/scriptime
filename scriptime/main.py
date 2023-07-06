@@ -101,7 +101,7 @@ class Timer:
         email_body += f"System information: {system_info}\n"
         email_body += f"Processor: {processor}\n"
         email_body += f"Python Version: {python_version}\n\n"
-        email_body += f"Packages Used: {self.pkgs}\n"
+        email_body += f"Packages Used:\n{self.pkgs}"
 
         try:
             with smtplib.SMTP(self.server, self.port) as smtp:
