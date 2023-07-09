@@ -7,6 +7,7 @@ Python library to notify when a script has finished running and providing insigh
   - [Getting Started](#getting-started)
   - [Using scriptimer](#using-scriptimer)
   - [Output](#output)
+  - [Links](#links)
 
 ## About
 
@@ -143,3 +144,8 @@ Package: numpy, Version: 1.24.2
 Package: scikit-learn, Version: 1.2.2
 ...
 ```
+
+## Links
+
+ - Source code: https://github.com/straslerj/scriptime
+ - PyPI: https://pypi.org/project/scriptime/
