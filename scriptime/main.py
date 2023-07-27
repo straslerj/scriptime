@@ -1,3 +1,4 @@
+import inspect
 import json
 import os
 import platform
@@ -68,7 +69,9 @@ class Timer:
         current_time = time.localtime()
         formatted_time = time.strftime("%m-%d-%Y %H:%M:%S", current_time)
 
-        file_name = os.path.basename(__file__)
+        caller_frame = inspect.stack()[1]
+        caller_module = inspect.getmodule(caller_frame[0])
+        file_name = os.path.basename(caller_module.__file__)
 
         self.descriptor = f"[{formatted_time}] {file_name} Finished"
         self.sender_email = None
