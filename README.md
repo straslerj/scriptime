@@ -5,7 +5,7 @@ Python library to notify when a script has finished running and providing insigh
 - [scriptime](#scriptime)
   - [About](#about)
   - [Getting Started](#getting-started)
-  - [Using scriptimer](#using-scriptimer)
+  - [Using scriptime](#using-scriptime)
   - [Output](#output)
   - [Links](#links)
 
@@ -54,9 +54,9 @@ The first step to using scriptime is setting up the email that will be sending t
         > Note that if you are using Gmail, you may have to create an [app password](https://support.google.com/accounts/answer/185833?hl=en). Your normal password will likely not work. Other email services may have similar catches.
 
 
-## Using scriptimer
+## Using scriptime
 
-The use of scriptimer is very straightforward:
+The use of scriptime is very straightforward:
 
 1. In a terminal, `pip install scriptime`
 2. In a Python (.py) or Jupyter Notebook (.ipynb) file, add
